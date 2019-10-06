@@ -1,5 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  Component, OnInit, Input, Output, EventEmitter,
+  ViewChild, ElementRef, AfterViewInit,
+} from '@angular/core';
+import {
+  FormBuilder, FormGroup, Validators,
+} from '@angular/forms';
 
 import { ICar } from '../../models/ICar';
 
@@ -8,7 +13,10 @@ import { ICar } from '../../models/ICar';
   templateUrl: './car-form.component.html',
   styleUrls: ['./car-form.component.css']
 })
-export class CarFormComponent implements OnInit {
+export class CarFormComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('makeInput', { static: true })
+  makeInputElement: ElementRef;
 
   @Input()
   headerText = 'Car Form';
@@ -23,32 +31,46 @@ export class CarFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit() {
-    this.carForm = this.fb.group({
+  initialForm() {
+    return {
       make: '',
       model: '',
       year: 1900,
       color: '',
       price: 0,
+    };
+  }
+
+  resetCarForm() {
+    this.carForm.reset();
+    this.carForm.setValue(this.initialForm());
+    this.makeInputElement.nativeElement.focus();
+  }
+
+  ngOnInit() {
+    this.carForm = this.fb.group({
+      make: [ '', { validators: [ Validators.required ] } ],
+      model: [ '', { validators: [ Validators.required ] } ],
+      year: [ 1900, { validators: [ Validators.required, Validators.min(1870), Validators.max(2020) ] } ],
+      color: [ '', { validators: [ Validators.required ] } ],
+      price: [ 0, { validators: [ Validators.required, Validators.min(0) ] } ],
     });
   }
 
-  doSubmitCar() {
+  ngAfterViewInit() {
+    this.makeInputElement.nativeElement.focus();
+  }
 
+  doSubmitCarForm() {
     this.submitCar.emit({
       ...this.carForm.value,
     });
 
-    this.carForm.reset();
+    this.resetCarForm();
+  }
 
-    this.carForm.setValue({
-      make: '',
-      model: '',
-      year: 1900,
-      color: '',
-      price: 0,
-    });
-
+  doResetCarForm() {
+    this.resetCarForm();
   }
 
 }

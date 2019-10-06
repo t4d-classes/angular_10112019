@@ -1,15 +1,16 @@
 <header>
   <h2>{{headerText}}</h2>
 </header>
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Id</th>
-      <th>Make</th>
-      <th>Model</th>
-      <th>Year</th>
-      <th>Color</th>
-      <th>Price</th>
+      <th><label for="edit-make-input">Make</label></th>
+      <th><label for="edit-model-input">Model</label></th>
+      <th><label for="edit-year-input">Year</label></th>
+      <th><label for="edit-color-input">Color</label></th>
+      <th><label for="edit-price-input">Price</label></th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -25,4 +26,4 @@
     </ng-container>
   </tbody>
 </table>
-<button (click)="doRefreshCars()">Refresh Cars</button>
+<button (click)="doRefreshCars()" class="btn btn-primary">Refresh Cars</button>

@@ -1,0 +1,16 @@
+td:nth-child(1) {
+  text-align: right;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+td:not(:nth-child(1)) input {
+  width: 75px;
+}
+
+td:nth-child(3) input {
+  width: 125px;
+}

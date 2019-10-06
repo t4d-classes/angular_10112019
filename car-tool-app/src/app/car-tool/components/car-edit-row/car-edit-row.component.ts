@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ICar } from '../../models/ICar';
@@ -8,7 +8,10 @@ import { ICar } from '../../models/ICar';
   templateUrl: './car-edit-row.component.html',
   styleUrls: ['./car-edit-row.component.css']
 })
-export class CarEditRowComponent implements OnInit {
+export class CarEditRowComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('editMakeInput', { static: true })
+  editMakeInputElement: ElementRef;
 
   @Input()
   car: ICar;
@@ -31,6 +34,10 @@ export class CarEditRowComponent implements OnInit {
       color: this.car.color,
       price: this.car.price,
     });
+  }
+
+  ngAfterViewInit() {
+    this.editMakeInputElement.nativeElement.focus();
   }
 
   doSaveCar() {
