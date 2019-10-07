@@ -57,7 +57,17 @@ export class CarEditRowComponent implements OnInit, AfterViewInit {
   doSaveCar() {
 
     if (this.editCarForm.invalid) {
-      this.notificationSvc.showErrorNotification('Edit Car Form is invalid');
+      this.notificationSvc.showErrorNotification([
+        'Edit Car Form is Invalid',
+        ...Object.keys(this.editCarForm.controls)
+          .filter((controlName) => {
+            return this.editCarForm.controls[controlName].invalid;
+          })
+          .map(controlName => {
+            return controlName.slice(0, 1).toUpperCase() +
+              controlName.slice(1) + ' is invalid';
+          }),
+      ]);
       return;
     }
 

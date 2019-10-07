@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { switchMap, tap, catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 import { ICar } from '../../models/ICar';
 import { CarsService } from '../../services/cars.service';
@@ -33,20 +33,45 @@ export class CarHomeComponent implements OnInit {
     carsObs.subscribe(cars => {
       this.cars = cars;
       this.editCarId = -1;
+    }, () => {
+      this.notificationSvc.showErrorNotification('Refresh Failed');
     });
   }
 
   doAppendCar(car: ICar) {
-    this.doRefreshCars(this.carsSvc.append(car));
-    this.notificationSvc.showInfoNotification('Car Added');
+    this.doRefreshCars(this.carsSvc.append(car).pipe(
+      tap(() => {
+        this.notificationSvc.showInfoNotification('Car Added');
+      }),
+      catchError(() => {
+        this.notificationSvc.showErrorNotification('Add Car Failed');
+        return of();
+      }),
+    ));
   }
 
   doReplaceCar(car: ICar) {
-    this.doRefreshCars(this.carsSvc.replace(car));
+    this.doRefreshCars(this.carsSvc.replace(car).pipe(
+      tap(() => {
+        this.notificationSvc.showInfoNotification('Car Replaced');
+      }),
+      catchError(() => {
+        this.notificationSvc.showErrorNotification('Replace Car Failed');
+        return of();
+      }),
+    ));
   }
 
   doDeleteCar(carId: number) {
-    this.doRefreshCars(this.carsSvc.delete(carId));
+    this.doRefreshCars(this.carsSvc.delete(carId).pipe(
+      tap(() => {
+        this.notificationSvc.showInfoNotification('Car Deleted');
+      }),
+      catchError(() => {
+        this.notificationSvc.showErrorNotification('Delete Car Failed');
+        return of();
+      }),
+    ));
   }
 
   doEditCar(carId: number) {

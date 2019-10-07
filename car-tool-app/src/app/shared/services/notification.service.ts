@@ -5,24 +5,35 @@ import { Injectable } from '@angular/core';
 })
 export class NotificationService {
 
-  notificationMessage = '';
+  notificationMessage: string | string[] = '';
   notificationType = 'Info';
   showNotification = false;
+  notificationTimerHandle = null;
 
-  showInfoNotification(value: string) {
+  showInfoNotification(value: string | string[]) {
     this.notificationMessage = value;
     this.notificationType = 'Info';
     this.showNotification = true;
-    setTimeout(() => {
+
+    if (this.notificationTimerHandle) {
+      clearTimeout(this.notificationTimerHandle);
+    }
+
+    this.notificationTimerHandle = setTimeout(() => {
       this.hideNotification();
     }, 3000);
   }
 
-  showErrorNotification(value: string) {
+  showErrorNotification(value: string | string[]) {
     this.notificationMessage = value;
     this.notificationType = 'Error';
     this.showNotification = true;
-    setTimeout(() => {
+
+    if (this.notificationTimerHandle) {
+      clearTimeout(this.notificationTimerHandle);
+    }
+
+    this.notificationTimerHandle = setTimeout(() => {
       this.hideNotification();
     }, 3000);
   }
@@ -37,6 +48,10 @@ export class NotificationService {
 
   get notificationState() {
     return this.showNotification ? 'show' : 'hide';
+  }
+
+  get notificationList() {
+    return Array.isArray(this.notificationMessage);
   }
 
 }

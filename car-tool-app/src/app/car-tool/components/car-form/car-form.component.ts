@@ -72,7 +72,18 @@ export class CarFormComponent implements OnInit, AfterViewInit {
   doSubmitCarForm() {
 
     if (this.carForm.invalid) {
-      this.notificationSvc.showErrorNotification('Car Form is invalid');
+      this.notificationSvc.showErrorNotification([
+        'Car Form is Invalid',
+        ...Object.keys(this.carForm.controls)
+          .filter((controlName) => {
+            return this.carForm.controls[controlName].invalid;
+          })
+          .map(controlName => {
+            return controlName.slice(0, 1).toUpperCase() +
+              controlName.slice(1) + ' is invalid';
+          }),
+      ]);
+
       return;
     }
 

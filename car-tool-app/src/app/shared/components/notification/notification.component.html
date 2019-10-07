@@ -6,6 +6,11 @@
     <a (click)="notificationSvc.hideNotification()">[X]</a>
   </header>
   <div>
-    {{notificationSvc.notificationMessage}}
+    <span *ngIf="!notificationSvc.notificationList">
+      {{notificationSvc.notificationMessage}}</span>
+    <ul *ngIf="notificationSvc.notificationList">
+      <li *ngFor="let message of notificationSvc.notificationMessage">
+        {{message}}</li>
+    </ul>
   </div>
 </div>
