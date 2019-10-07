@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { ICar } from '../../models/ICar';
 import { CarsService } from '../../services/cars.service';
+import { NotificationService } from '../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-car-home',
@@ -15,7 +16,10 @@ export class CarHomeComponent implements OnInit {
   cars: ICar[] = [];
   editCarId = -1;
 
-  constructor(private carsSvc: CarsService) { }
+  constructor(
+    private carsSvc: CarsService,
+    private notificationSvc: NotificationService,
+  ) { }
 
   ngOnInit() {
     this.doRefreshCars();
@@ -34,6 +38,7 @@ export class CarHomeComponent implements OnInit {
 
   doAppendCar(car: ICar) {
     this.doRefreshCars(this.carsSvc.append(car));
+    this.notificationSvc.showInfoNotification('Car Added');
   }
 
   doReplaceCar(car: ICar) {

@@ -3,10 +3,15 @@ import {
   ViewChild, ElementRef, AfterViewInit,
 } from '@angular/core';
 import {
-  FormBuilder, FormGroup, Validators,
+  FormBuilder, FormGroup,
 } from '@angular/forms';
 
 import { ICar } from '../../models/ICar';
+import {
+  makeInput, modelInput, yearInput,
+  colorInput, priceInput,
+} from '../../forms/carForm';
+import { NotificationService } from '../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-car-form',
@@ -29,7 +34,10 @@ export class CarFormComponent implements OnInit, AfterViewInit {
 
   carForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private notificationSvc: NotificationService,
+  ) { }
 
   initialForm() {
     return {
@@ -49,11 +57,11 @@ export class CarFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.carForm = this.fb.group({
-      make: [ '', { validators: [ Validators.required ] } ],
-      model: [ '', { validators: [ Validators.required ] } ],
-      year: [ 1900, { validators: [ Validators.required, Validators.min(1870), Validators.max(2020) ] } ],
-      color: [ '', { validators: [ Validators.required ] } ],
-      price: [ 0, { validators: [ Validators.required, Validators.min(0) ] } ],
+      make: makeInput(),
+      model: modelInput(),
+      year: yearInput(),
+      color: colorInput(),
+      price: priceInput(),
     });
   }
 
@@ -62,6 +70,12 @@ export class CarFormComponent implements OnInit, AfterViewInit {
   }
 
   doSubmitCarForm() {
+
+    if (this.carForm.invalid) {
+      this.notificationSvc.showErrorNotification('Car Form is invalid');
+      return;
+    }
+
     this.submitCar.emit({
       ...this.carForm.value,
     });

@@ -7,10 +7,24 @@ td {
   vertical-align: middle;
 }
 
-td:not(:nth-child(1)) input {
+td input {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+td:nth-child(2) input {
   width: 75px;
 }
 
 td:nth-child(3) input {
   width: 125px;
+}
+
+td:nth-child(4) input,
+td:nth-child(5) input {
+  width: 60px;
+}
+
+td:nth-child(6) input {
+  width: 90px;
 }

@@ -1,0 +1,11 @@
+<div
+  [class]="'t4d-toast ' + notificationSvc.notificationClass"
+  [@showHide]="notificationSvc.notificationState">
+  <header>
+    {{notificationSvc.notificationType}}
+    <a (click)="notificationSvc.hideNotification()">[X]</a>
+  </header>
+  <div>
+    {{notificationSvc.notificationMessage}}
+  </div>
+</div>
