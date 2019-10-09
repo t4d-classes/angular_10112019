@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CarViewRowComponent } from '../car-view-row/car-view-row.component';
+import { CarEditRowComponent } from '../car-edit-row/car-edit-row.component';
 
 import { CarTableComponent } from './car-table.component';
 
@@ -8,7 +11,12 @@ describe('CarTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CarTableComponent ]
+      imports: [ ReactiveFormsModule ],
+      declarations: [
+        CarTableComponent,
+        CarViewRowComponent,
+        CarEditRowComponent,
+      ],
     })
     .compileComponents();
   }));

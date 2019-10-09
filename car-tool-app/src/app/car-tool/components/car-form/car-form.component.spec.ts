@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { CarFormComponent } from './car-form.component';
 
@@ -8,7 +9,8 @@ describe('CarFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CarFormComponent ]
+      declarations: [ CarFormComponent ],
+      imports: [ ReactiveFormsModule ],
     })
     .compileComponents();
   }));

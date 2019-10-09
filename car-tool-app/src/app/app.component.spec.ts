@@ -1,15 +1,30 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { AppComponent } from './app.component';
+import { NotificationComponent } from './shared/components/notification/notification.component';
+import { ToolHeaderComponent } from './shared/components/tool-header/tool-header.component';
+import { ToolFooterComponent } from './shared/components/tool-footer/tool-footer.component';
+import { CarHomeComponent } from './car-tool/components/car-home/car-home.component';
+import { CarTableComponent } from './car-tool/components/car-table/car-table.component';
+import { CarViewRowComponent } from './car-tool/components/car-view-row/car-view-row.component';
+import { CarEditRowComponent } from './car-tool/components/car-edit-row/car-edit-row.component';
+import { CarFormComponent } from './car-tool/components/car-form/car-form.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        BrowserAnimationsModule,
+        RouterTestingModule,
+        ReactiveFormsModule,
       ],
       declarations: [
-        AppComponent
+        AppComponent, CarHomeComponent, NotificationComponent, ToolHeaderComponent,
+        ToolFooterComponent, CarTableComponent, CarViewRowComponent, CarEditRowComponent,
+        CarFormComponent,
       ],
     }).compileComponents();
   }));
@@ -20,16 +35,4 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'car-tool-app'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('car-tool-app');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('car-tool-app app is running!');
-  });
 });
