@@ -58,15 +58,101 @@ describe('CarsService', () => {
 
   it('should append a car', () => {
 
+    const appendCarSpy = jasmine.createSpy('appendCar');
+
     const carToAppend: ICar = { make: 'test', model: 'test2', year: 1900, color: 'upick', price: 1 };
     const carAppended: ICar = { id: 1, ...carToAppend };
 
-    carsSvc.append(carToAppend).subscribe(car => expect(car).toEqual(carAppended));
+    carsSvc.append(carToAppend).subscribe(appendCarSpy);
 
     const req = http.expectOne('http://localhost:3010/cars');
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual(carToAppend);
-    req.flush(carAppended);
+
+    req.flush(carAppended, {
+      headers: { 'Content-Type': 'application/json' },
+      status: 201,
+      statusText: 'Created',
+    });
+
+    expect(appendCarSpy).toHaveBeenCalledWith(carAppended);
+  });
+
+  it('should replace a car', () => {
+
+    const replaceCarSpy = jasmine.createSpy('replaceCar');
+
+    const originalCar: ICar = { id: 1, make: 'test', model: 'test2', year: 1900, color: 'upick', price: 1 };
+    const newCar: ICar = { id: 1, ...originalCar, color: 'red' };
+
+    carsSvc.replace(newCar).subscribe(replaceCarSpy);
+
+    // get the original car
+    const req1 = http.expectOne('http://localhost:3010/cars/1');
+    expect(req1.request.method).toEqual('GET');
+
+    req1.flush(
+      originalCar,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+        statusText: 'OK'
+      }
+    );
+
+    // put the new car
+    const req2 = http.expectOne('http://localhost:3010/cars/1');
+    expect(req2.request.method).toEqual('PUT');
+    expect(req2.request.body).toEqual(newCar);
+
+    req2.flush(
+      newCar,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+        statusText: 'OK'
+      }
+    );
+
+    // the original car should be the response
+    expect(replaceCarSpy).toHaveBeenCalledWith(originalCar);
+  });
+
+  it('should delete a car', () => {
+
+    const deleteCarSpy = jasmine.createSpy('deleteCar');
+
+    const originalCar: ICar = { id: 1, make: 'test', model: 'test2', year: 1900, color: 'upick', price: 1 };
+
+    carsSvc.delete(originalCar.id).subscribe(deleteCarSpy);
+
+    // get the original car
+    const req1 = http.expectOne('http://localhost:3010/cars/1');
+    expect(req1.request.method).toEqual('GET');
+
+    req1.flush(
+      originalCar,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+        statusText: 'OK'
+      }
+    );
+
+    // delete the new car
+    const req2 = http.expectOne('http://localhost:3010/cars/1');
+    expect(req2.request.method).toEqual('DELETE');
+
+    req2.flush(
+      null,
+      {
+        status: 204,
+        statusText: 'NO CONTENT'
+      }
+    );
+
+    // the original car should be the response
+    expect(deleteCarSpy).toHaveBeenCalledWith(originalCar);
   });
 
   afterEach(() => {
