@@ -1,27 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ICar } from '../../models/ICar';
+import { getNativeElement, setFormControl } from '../../utils/test-tools';
 
 import { CarFormComponent } from './car-form.component';
-
-const getNativeElement = <T>(fixture: ComponentFixture<any>, cssSelector: string) => {
-
-  return fixture.debugElement
-    .query(By.css(cssSelector))
-    .nativeElement as T;
-};
-
-const setFormControl = <T>(fixture: ComponentFixture<T>, controlId: string, controlValue: any) => {
-
-  const input = fixture.debugElement
-    .query(By.css(`#${controlId}`))
-    .nativeElement;
-
-  input.value = controlValue;
-  input.dispatchEvent(new Event('input'));
-}
 
 describe('CarFormComponent', () => {
   let component: CarFormComponent;
