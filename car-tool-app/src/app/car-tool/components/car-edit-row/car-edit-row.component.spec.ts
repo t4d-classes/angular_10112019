@@ -42,7 +42,9 @@ describe('CarEditRowComponent', () => {
 
   it('should output the modified car', () => {
 
-    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+    const input = fixture.debugElement
+      .query(By.css('input'))
+      .nativeElement;
 
     input.value = 'Chevrolet';
     input.dispatchEvent(new Event('input'));
@@ -55,10 +57,7 @@ describe('CarEditRowComponent', () => {
 
     const spy = jasmine.createSpy('saveCar');
 
-    component.saveCar.subscribe(outputtedCar => {
-      expect(outputtedCar).toEqual(car);
-      spy(outputtedCar);
-    });
+    component.saveCar.subscribe(spy);
 
     const button = fixture.debugElement
       .query(By.css('button:nth-child(1)'))
@@ -72,9 +71,7 @@ describe('CarEditRowComponent', () => {
 
     const spy = jasmine.createSpy('cancelCar');
 
-    component.cancelCar.subscribe(p => {
-      spy(p);
-    });
+    component.cancelCar.subscribe(spy);
 
     const button = fixture.debugElement
       .query(By.css('button:nth-child(2)'))
@@ -82,5 +79,5 @@ describe('CarEditRowComponent', () => {
 
     button.dispatchEvent(new Event('click'));
     expect(spy).toHaveBeenCalledWith(undefined);
-  });  
+  });
 });

@@ -71,10 +71,7 @@ describe('CarViewRowComponent', () => {
 
     const spy = jasmine.createSpy('editCar');
 
-    component.editCar.subscribe(carId => {
-      expect(carId).toEqual(car.id);
-      spy(carId);
-    });
+    component.editCar.subscribe(spy);
 
     const button = fixture.debugElement
       .query(By.css('button:nth-child(1)'))
@@ -88,10 +85,7 @@ describe('CarViewRowComponent', () => {
 
     const spy = jasmine.createSpy('deleteCar');
 
-    component.deleteCar.subscribe(carId => {
-      expect(carId).toEqual(car.id);
-      spy(carId);
-    });
+    component.deleteCar.subscribe(spy);
 
     const button = fixture.debugElement
       .query(By.css('button:nth-child(2)'))
