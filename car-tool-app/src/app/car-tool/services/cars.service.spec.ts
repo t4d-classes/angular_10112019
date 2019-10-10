@@ -26,33 +26,46 @@ describe('CarsService', () => {
 
   it('should get all cars', () => {
 
+    const allCarsSpy = jasmine.createSpy('allCars');
+
     const expectedCars = [
       { id: 1, make: 'test', model: 'test', year: 2017, color: 'green', price: 10000 },
       { id: 2, make: 'test', model: 'test', year: 2018, color: 'green', price: 20000 },
     ];
 
-    carsSvc.all().subscribe(cars => {
-      expect(cars).toEqual(expectedCars);
-    });
+    carsSvc.all().subscribe(allCarsSpy);
 
     const req = http.expectOne('http://localhost:3010/cars');
     expect(req.request.method).toEqual('GET');
-    req.flush(expectedCars);
+
+    req.flush(expectedCars, {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+      statusText: 'OK',
+    });
+
+    expect(allCarsSpy).toHaveBeenCalledWith(expectedCars);
 
   });
 
   it('should get one car', () => {
 
+    const oneCarSpy = jasmine.createSpy('oneCar');
+
     const expectedCar = { id: 1, make: 'test', model: 'test', year: 2017, color: 'green', price: 10000 };
 
-    carsSvc.one(1).subscribe(cars => {
-      expect(cars).toEqual(expectedCar);
-    });
+    carsSvc.one(1).subscribe(oneCarSpy);
 
     const req = http.expectOne('http://localhost:3010/cars/1');
     expect(req.request.method).toEqual('GET');
-    req.flush(expectedCar);
 
+    req.flush(expectedCar, {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+      statusText: 'OK',
+    });
+
+    expect(oneCarSpy).toHaveBeenCalledWith(expectedCar);
   });
 
 
@@ -144,10 +157,11 @@ describe('CarsService', () => {
     expect(req2.request.method).toEqual('DELETE');
 
     req2.flush(
-      null,
+      {},
       {
-        status: 204,
-        statusText: 'NO CONTENT'
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+        statusText: 'OK'
       }
     );
 
