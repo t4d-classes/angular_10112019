@@ -1,21 +1,10 @@
-import { Pipe, PipeTransform } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { ICar } from '../../models/ICar';
 
+import { FakeCurrencyPipe } from '../../fakes/fake-pipes';
 import { CarViewRowComponent } from './car-view-row.component';
-
-@Pipe({
-  name: 'currency',
-})
-class FakeCurrencyPipe implements PipeTransform {
-
-  transform(value: any) {
-    return value;
-  }
-
-}
 
 describe('CarViewRowComponent', () => {
   let component: CarViewRowComponent;
