@@ -99,8 +99,6 @@ describe('CarTableComponent', () => {
 
     const trElement = getNativeElement<HTMLTableRowElement>(fixture, 'tr.app-car-edit-row:nth-child(2)');
 
-    console.log(trElement);
-
     expect(trElement).toBeDefined();
   });
 

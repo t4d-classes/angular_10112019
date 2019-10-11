@@ -53,8 +53,6 @@ export class CarHomeComponent implements OnInit {
   doReplaceCar(car: ICar) {
     this.doRefreshCars(this.carsSvc.replace(car).pipe(
       tap((oldCar) => {
-        console.log('old car', oldCar);
-        console.log('new car', car);
         this.notificationSvc.showInfoNotification('Car Replaced');
       }),
       catchError(() => {
