@@ -19,19 +19,34 @@ describe('CarHomeComponent', () => {
 
   const fakeCarsService = {
     _cars: cars,
-    all() { return of(this._cars); },
-    one() { return null; },
-    append(car: ICar) { return of(this._cars = this._cars.concat({
-      ...car, id: Math.max(...cars.map(c => c.id), 0) + 1,
-    })); },
-    replace: () => null,
-    delete: () => null,
+    all() {
+      return of(this._cars);
+    },
+    one(carId: number) {
+      return of(this._cars.find(c => c.id === carId));
+    },
+    append(car: ICar) {
+      return of(this._cars = this._cars.concat({
+        ...car, id: Math.max(...cars.map(c => c.id), 0) + 1,
+      }));
+    },
+    replace(car: ICar) {
+      const carIndex = this._cars.findIndex(c => c.id === car.id);
+      const newCars = this._cars.concat();
+      newCars[carIndex] = car;
+      return of(this._cars = newCars);
+    },
+    delete(carId) {
+      return of(this._cars = this._cars.filter(c => c.id !== carId));
+    },
   };
 
   beforeEach(async(() => {
 
     spyOn(fakeCarsService, 'all').and.callThrough();
     spyOn(fakeCarsService, 'append').and.callThrough();
+    spyOn(fakeCarsService, 'replace').and.callThrough();
+    spyOn(fakeCarsService, 'delete').and.callThrough();
 
     TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule, HttpClientTestingModule, ],
@@ -48,7 +63,6 @@ describe('CarHomeComponent', () => {
     fixture = TestBed.createComponent(CarHomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
   });
 
   it('should create', () => {
@@ -56,9 +70,6 @@ describe('CarHomeComponent', () => {
   });
 
   it('should refresh cars', () => {
-
-    console.log(fakeCarsService._cars.length);
-
     component.doRefreshCars();
     expect(fakeCarsService.all).toHaveBeenCalled();
     expect(component.cars.length).toBe(2);
@@ -66,7 +77,6 @@ describe('CarHomeComponent', () => {
 
   it('should append car', () => {
 
-    console.log(fakeCarsService._cars.length);
     const car: ICar = { make: 'test', model: 'test', year: 2002, color: 'red', price: 100 };
 
     component.doAppendCar(car);
@@ -74,6 +84,30 @@ describe('CarHomeComponent', () => {
     expect(fakeCarsService.append).toHaveBeenCalledWith(car);
     expect(fakeCarsService.all).toHaveBeenCalled();
     expect(component.cars.length).toBe(3);
+  });
+
+  it('should replace car', () => {
+
+    const car: ICar = { id: 2, make: 'test', model: 'test', year: 2002, color: 'red', price: 100 };
+
+    component.doReplaceCar(car);
+
+    expect(fakeCarsService.replace).toHaveBeenCalledWith(car);
+    expect(fakeCarsService.all).toHaveBeenCalled();
+    expect(component.cars.length).toBe(2);
+    expect(component.cars.find(c => c.id === car.id).color).toBe('red');
+  });
+
+  it('should delete car', () => {
+
+    const carId = 2;
+
+    component.doDeleteCar(carId);
+
+    expect(fakeCarsService.delete).toHaveBeenCalledWith(carId);
+    expect(fakeCarsService.all).toHaveBeenCalled();
+    expect(component.cars.length).toBe(1);
+    expect(component.cars.filter(c => c.id === carId).length).toBe(0);
   });
 
   it('edit car', () => {
